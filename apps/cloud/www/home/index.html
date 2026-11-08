@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>5Tick</title>
+  <link rel="icon" href="logo.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="chat.css?v=5" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand-block">
+        <img class="logo" src="logo.png" alt="5Tick" />
+      </div>
+      <button type="button" class="btn-sidebar" id="newChat">
+        <span class="plus">+</span> New Chat
+      </button>
+      <div class="chat-list-wrap">
+        <div class="chat-list-label">Chats</div>
+        <div class="chat-list" id="chatList"></div>
+      </div>
+      <nav class="side-links">
+        <a href="/admin/">Admin</a>
+        <a href="/dev/">Dev</a>
+        <a href="/health" target="_blank" rel="noopener">Health</a>
+      </nav>
+      <div class="side-foot">
+        <label for="providerSelect">Provider</label>
+        <select id="providerSelect" aria-label="Model provider">
+          <option value="ollama">Ollama (local)</option>
+        </select>
+        <label for="themeSelect">Theme</label>
+        <select id="themeSelect" aria-label="Theme">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+        </select>
+        <p class="meta" id="modelMeta">…</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="top">
+        <div class="modes" role="tablist" aria-label="Mode">
+          <button type="button" class="mode active" data-mode="ask" role="tab" aria-selected="true">Ask</button>
+          <button type="button" class="mode" data-mode="ide" role="tab" aria-selected="false">Agent</button>
+        </div>
+        <p class="mode-hint" id="modeHint">Ask can search/fetch the live web. No file writes.</p>
+      </header>
+
+      <section class="thread" id="thread" aria-live="polite">
+        <div class="empty" id="empty">
+          <img class="logo-hero" src="logo.png" alt="5Tick" />
+          <p>Ask for live prices or news. Chats are saved in the sidebar like ChatGPT.</p>
+        </div>
+      </section>
+
+      <footer class="composer">
+        <div class="composer-box">
+          <textarea id="input" rows="1" placeholder="Plan, search, build anything…" autocomplete="off"></textarea>
+          <div class="composer-actions">
+            <button type="button" class="ghost" id="stopBtn" hidden>Stop</button>
+            <button type="button" class="send" id="sendBtn" title="Send" aria-label="Send">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M8 12.5V3.5M8 3.5L3.5 8M8 3.5L12.5 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <p class="status" id="status"></p>
+      </footer>
+    </main>
+  </div>
+  <script src="chat.js?v=5"></script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>5Tick Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../admin/styles.css" />
+  <style>
+    body { grid-template-columns: 1fr; max-width: 900px; margin: 0 auto; padding: 2rem 1.25rem; display: block; }
+    .hero { margin-bottom: 1.75rem; }
+    .hero h1 {
+      font-size: 2rem;
+      margin: 0 0 0.35rem;
+      background: linear-gradient(135deg, #f97316, #a855f7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero p { color: var(--muted); margin: 0; max-width: 36rem; }
+    .row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+    textarea, input[type="text"] {
+      width: 100%;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 4px;
+      padding: 0.65rem 0.75rem;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+    }
+    textarea { min-height: 100px; resize: vertical; }
+    #out {
+      white-space: pre-wrap;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      line-height: 1.45;
+      min-height: 120px;
+      max-height: 360px;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>5Tick</h1>
+    <p>Developer console — probe cloud health, auth wiring, and agent proxy before shipping IDE builds.</p>
+    <div class="row">
+      <a class="primary" href="/admin/">Open Admin</a>
+      <button class="ghost" id="devLogin">Dev login (auth off)</button>
+      <a class="ghost" href="/api/auth/oauth/github">GitHub OAuth</a>
+      <a class="ghost" href="/api/auth/oauth/google">Google OAuth</a>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>Session token</h3>
+    <input type="text" id="token" placeholder="stk_… from OAuth callback or dev login" />
+  </div>
+
+  <div class="block">
+    <h3>Agent chat (via cloud)</h3>
+    <textarea id="prompt">Say hello from 5Tick cloud in one short sentence.</textarea>
+    <div class="row">
+      <button class="primary" id="send">Send</button>
+      <button class="ghost" id="health">Health</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>Output</h3>
+    <div id="out"></div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    if (params.get("token")) {
+      localStorage.setItem("5tick_dev_token", params.get("token"));
+      history.replaceState({}, "", "/dev/");
+    }
+    const tok = () => document.getElementById("token").value.trim() || localStorage.getItem("5tick_dev_token") || "";
+    document.getElementById("token").value = localStorage.getItem("5tick_dev_token") || "";
+    document.getElementById("token").addEventListener("change", (e) => {
+      localStorage.setItem("5tick_dev_token", e.target.value.trim());
+    });
+
+    document.getElementById("devLogin").onclick = async () => {
+      const r = await fetch("/api/auth/dev-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: "dev@5tick.local", name: "5Tick Dev" }),
+      });
+      const j = await r.json();
+      document.getElementById("out").textContent = JSON.stringify(j, null, 2);
+      if (j.token) {
+        localStorage.setItem("5tick_dev_token", j.token);
+        document.getElementById("token").value = j.token;
+      }
+    };
+
+    document.getElementById("health").onclick = async () => {
+      const [h, a, b] = await Promise.all([
+        fetch("/health").then((r) => r.json()),
+        fetch("/api/auth/status").then((r) => r.json()),
+        fetch("/api/billing/status", { headers: { Authorization: "Bearer " + tok() } }).then((r) => r.json()),
+      ]);
+      document.getElementById("out").textContent = JSON.stringify({ health: h, auth: a, billing: b }, null, 2);
+    };
+
+    document.getElementById("send").onclick = async () => {
+      const out = document.getElementById("out");
+      out.textContent = "";
+      const r = await fetch("/api/agent/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tok(),
+        },
+        body: JSON.stringify({
+          mode: "ask",
+          messages: [{ role: "user", content: document.getElementById("prompt").value }],
+          projectKey: "dev-console",
+        }),
+      });
+      if (!r.ok) {
+        out.textContent = await r.text();
+        return;
+      }
+      const reader = r.body.getReader();
+      const dec = new TextDecoder();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = dec.decode(value);
+        out.textContent += chunk;
+        out.scrollTop = out.scrollHeight;
+      }
+    };
+  </script>
+</body>
+</html>

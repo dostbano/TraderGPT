@@ -1,0 +1,15 @@
+{
+  "nameShort": "5Tick",
+  "nameLong": "5Tick IDE",
+  "applicationName": "5tick",
+  "dataFolderName": ".5tick-ide",
+  "win32MutexName": "5tickide",
+  "win32DirName": "5Tick",
+  "win32NameVersion": "5Tick IDE",
+  "win32AppUserModelId": "5Tick.IDE",
+  "win32ShellNameShort": "5Tick",
+  "darwinBundleIdentifier": "com.fivetick.ide",
+  "reportIssueUrl": "",
+  "licenseUrl": "https://github.com/microsoft/vscode/blob/main/LICENSE.txt",
+  "nodejsRepository": "https://nodejs.org"
+}

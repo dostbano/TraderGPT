@@ -1,0 +1,19 @@
+node_modules/
+dist/
+out/
+.env
+*.vsix
+.DS_Store
+*.log
+.vscode-test/
+coverage/
+.turbo/
+*.tsbuildinfo
+.fiveTick-selftest/
+apps/cloud/data/
+
+# Huge local IDE builds (rebuild on target or use Setup.exe separately)
+apps/ide/vscode/
+apps/ide/VSCode-win32-x64/
+apps/ide/dist/
+apps/ide/*.vsix

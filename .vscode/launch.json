@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run 5Tick Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "${workspaceFolder}/demo-workspace",
+        "--extensionDevelopmentPath=${workspaceFolder}/apps/extension",
+        "--disable-workspace-trust"
+      ],
+      "outFiles": ["${workspaceFolder}/apps/extension/out/**/*.js"],
+      "preLaunchTask": "build-extension"
+    }
+  ]
+}

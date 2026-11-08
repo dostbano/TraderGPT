@@ -1,0 +1,44 @@
+{
+  "name": "5tick",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TraderGPT / 5Tick — AI agent + cloud control plane (Ask/Agent, providers, live market hooks)",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "powershell -ExecutionPolicy Bypass -File scripts/start-server.ps1",
+    "server": "powershell -ExecutionPolicy Bypass -File scripts/start-server.ps1",
+    "bootstrap": "powershell -ExecutionPolicy Bypass -File scripts/bootstrap-server.ps1",
+    "start:unix": "bash scripts/bootstrap-server.sh --start",
+    "bootstrap:unix": "bash scripts/bootstrap-server.sh",
+    "build": "npm run build -w @5tick/shared && npm run build -w @5tick/agent && npm run build -w @5tick/cloud && npm run build -w 5tick",
+    "build:shared": "npm run build -w @5tick/shared",
+    "build:agent": "npm run build -w @5tick/agent",
+    "build:cloud": "npm run build -w @5tick/cloud",
+    "build:extension": "npm run build -w 5tick",
+    "agent": "npm run start -w @5tick/agent",
+    "agent:dev": "npm run dev -w @5tick/agent",
+    "cloud": "npm run start -w @5tick/cloud",
+    "cloud:dev": "npm run dev -w @5tick/cloud",
+    "test:phase3": "node scripts/phase3-selftest.mjs",
+    "ide": "powershell -ExecutionPolicy Bypass -File scripts/start-5tick-ide.ps1",
+    "ide:bootstrap": "powershell -ExecutionPolicy Bypass -File scripts/bootstrap-code-oss.ps1",
+    "ide:package": "powershell -ExecutionPolicy Bypass -File scripts/package-vsix.ps1",
+    "ide:install-oss": "powershell -ExecutionPolicy Bypass -File scripts/install-code-oss-deps.ps1",
+    "ide:compile-oss": "powershell -ExecutionPolicy Bypass -File scripts/compile-code-oss.ps1",
+    "ide:run-oss": "powershell -ExecutionPolicy Bypass -File scripts/run-code-oss.ps1",
+    "ide:installer": "powershell -ExecutionPolicy Bypass -File scripts/package-code-oss-installer.ps1",
+    "ide:embed-agent": "powershell -ExecutionPolicy Bypass -File scripts/embed-agent-into-ide.ps1",
+    "ide:setup": "powershell -ExecutionPolicy Bypass -File scripts/make-setup-exe.ps1",
+    "ide:portable": "powershell -ExecutionPolicy Bypass -File scripts/make-portable-installer.ps1",
+    "agent:ensure": "powershell -ExecutionPolicy Bypass -File scripts/ensure-agent.ps1",
+    "cloud:ensure": "powershell -ExecutionPolicy Bypass -File scripts/ensure-cloud.ps1",
+    "cloud:bg": "powershell -ExecutionPolicy Bypass -File scripts/start-cloud-bg.ps1",
+    "lint": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

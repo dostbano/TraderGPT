@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>5Tick Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <aside class="rail">
+    <div class="brand">
+      <span class="mark"></span>
+      <div>
+        <strong>5Tick</strong>
+        <small>Admin</small>
+      </div>
+    </div>
+    <nav>
+      <button class="nav active" data-panel="overview">Overview</button>
+      <button class="nav" data-panel="users">Users</button>
+      <button class="nav" data-panel="auth">Auth</button>
+      <button class="nav" data-panel="billing">Billing</button>
+    </nav>
+    <div class="rail-foot">
+      <label>Admin token</label>
+      <input id="adminToken" type="password" placeholder="x-admin-token" autocomplete="off" />
+      <button id="saveToken" class="ghost">Save</button>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1 id="title">Overview</h1>
+      <button id="refresh" class="primary">Refresh</button>
+    </header>
+    <section id="panel-overview" class="panel active"></section>
+    <section id="panel-users" class="panel"></section>
+    <section id="panel-auth" class="panel"></section>
+    <section id="panel-billing" class="panel"></section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

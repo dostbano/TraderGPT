@@ -1,0 +1,146 @@
+{
+  "name": "5tick",
+  "displayName": "5Tick",
+  "description": "5Tick AI coding agent — Trae-like chat + tools for VS Code",
+  "version": "0.1.0",
+  "publisher": "5tick",
+  "private": true,
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["AI", "Other"],
+  "activationEvents": [
+    "onStartupFinished",
+    "onView:fiveTick.chat",
+    "onCommand:fiveTick.openChat",
+    "onCommand:fiveTick.runTask",
+    "onCommand:fiveTick.ensureAgent"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "fiveTick",
+          "title": "5Tick",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "fiveTick": [
+        {
+          "type": "webview",
+          "id": "fiveTick.chat",
+          "name": "5Tick Agent"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "fiveTick.openChat",
+        "title": "5Tick: Open Chat"
+      },
+      {
+        "command": "fiveTick.runTask",
+        "title": "5Tick: Run Agent Task"
+      },
+      {
+        "command": "fiveTick.setAgentUrl",
+        "title": "5Tick: Set Agent URL"
+      },
+      {
+        "command": "fiveTick.ensureAgent",
+        "title": "5Tick: Start / Ensure Agent"
+      }
+    ],
+    "configuration": {
+      "title": "5Tick",
+      "properties": {
+        "fiveTick.agentUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:3847",
+          "description": "URL of the local 5Tick agent server"
+        },
+        "fiveTick.apiBase": {
+          "type": "string",
+          "default": "",
+          "description": "OpenAI-compatible API base (overrides agent .env). Examples: https://api.openai.com/v1, http://127.0.0.1:11434/v1, https://openrouter.ai/api/v1"
+        },
+        "fiveTick.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API key for the model provider (overrides agent .env). Prefer OS secret storage for production."
+        },
+        "fiveTick.model": {
+          "type": "string",
+          "default": "",
+          "description": "Model id (overrides agent .env). For uncensored local use e.g. llama3.1 / dolphin-mixtral via Ollama."
+        },
+        "fiveTick.uncensoredPreset": {
+          "type": "boolean",
+          "default": true,
+          "description": "When true and apiBase is empty, default the bundled agent to local Ollama (http://127.0.0.1:11434/v1, model dolphin-mixtral:8x7b) and auto-start Ollama if needed"
+        },
+
+        "fiveTick.autoOpenChangedFiles": {
+          "type": "boolean",
+          "default": true,
+          "description": "Open files after the agent writes them"
+        },
+        "fiveTick.showDiffOnWrite": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically open a before/after diff when a file is written"
+        },
+        "fiveTick.mirrorTerminal": {
+          "type": "boolean",
+          "default": true,
+          "description": "Echo agent shell commands into a VS Code terminal named 5Tick"
+        },
+        "fiveTick.defaultMode": {
+          "type": "string",
+          "enum": ["ask", "ide", "solo"],
+          "default": "ide",
+          "description": "Default agent mode: ask (read-only), ide (assisted), or solo (autonomous)"
+        },
+        "fiveTick.cloudUrl": {
+          "type": "string",
+          "default": "https://ai.11tick.com",
+          "description": "5Tick cloud control plane (auth/history/billing). Leave empty to use local agent only."
+        },
+        "fiveTick.useCloudAgent": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, route agent runs through fiveTick.cloudUrl instead of fiveTick.agentUrl"
+        },
+        "fiveTick.authToken": {
+          "type": "string",
+          "default": "",
+          "description": "Session token from cloud login (filled after OAuth when enabled)"
+        },
+        "fiveTick.authEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable cloud login UI when GitHub/Google OAuth credentials are configured on the server"
+        },
+
+        "fiveTick.safeMode": {
+          "type": "boolean",
+          "default": true,
+          "description": "Ask Allow/Deny before write_file and run_terminal (not content censorship)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -watch -p tsconfig.json",
+    "vscode:prepublish": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.8.2"
+  }
+}
